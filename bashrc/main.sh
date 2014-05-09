@@ -6,7 +6,7 @@
 # return if this script is executed twice
 [[ -n $(declare -p _DOTFILES_DIR 2>/dev/null) ]] && return
 
-_DOTFILES_BRANCH="nutz"
+_DOTFILES_BRANCH="master"
 _DOTFILES_DIR="${HOME}/.dotfiles"
 _BASHRC_DIR="${_DOTFILES_DIR}/bashrc"
 
