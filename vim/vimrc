@@ -1,0 +1,382 @@
+scriptencoding utf-8
+
+"-----------------------------------------------------------------------
+" terminal setup
+"-----------------------------------------------------------------------
+
+if (&term =~ "xterm" || &term =~ "screen" || &term =~ "rxvt-unicode") && (&termencoding == "")
+	set termencoding=utf-8
+endif
+
+"-----------------------------------------------------------------------
+" global settings
+"-----------------------------------------------------------------------
+
+" load bundles
+source ~/.vim/autoload/pathogen.vim
+call pathogen#infect("~/.vim/bundle")
+call pathogen#helptags()
+
+" don't be compatible with vi
+set nocompatible
+
+" fast redrawing
+set ttyfast
+set lazyredraw
+
+" enable a nice big viminfo file
+set viminfo='1000,f1,:1000,/1000
+set history=500
+
+" make backspace delete lots of things
+set backspace=indent,eol,start
+
+" show us the command we're typing
+set showcmd
+
+" highlight matching parens
+set showmatch
+
+" search options: incremental search, highlight search
+set hlsearch
+set incsearch
+
+" case insensitive
+set ignorecase
+set infercase
+set smartcase
+
+" show line numbers
+set number
+
+" always show the statusbar
+set laststatus=2
+
+" show full tags when doing search completion
+set showfulltag
+
+" use hidden buffers
+set hidden
+
+" scrolling context
+set scrolloff=6
+set sidescrolloff=5
+
+" wrap on these
+set whichwrap+=<,>,[,]
+
+" by default, go for an indent of 4 and do not expand tabs
+set shiftwidth=4
+set tabstop=4
+set noexpandtab
+
+" fold automatically on markers
+"set foldmethod=marker
+set foldmethod=indent
+set foldlevel=99
+
+" load nice colors
+set t_Co=256
+set background=dark
+colorscheme desert
+
+" enable syntax highlighting
+if has("syntax")
+	syntax on
+endif
+
+" enable and reload filetype settings
+if has("eval")
+	filetype on
+	filetype plugin on
+	filetype indent on
+endif
+
+" enable modelines only on secure vim versions
+if (v:version >= 604)
+	set modeline modelines=10
+else
+	set nomodeline
+endif
+
+" Nice window title
+set title
+if has('title') && (has('gui_running') || &title)
+	set titlestring=
+	set titlestring+=%f\                     " file name
+	set titlestring+=%h%m%r%w                " flags
+	set titlestring+=\ -\ %{v:progname}      " program name
+endif
+
+" if possible, try to use a narrow number column.
+if v:version >= 700
+	try
+		setlocal numberwidth=3
+	catch
+	endtry
+endif
+
+" show tabs and trailing whitespace visually
+if (&termencoding == "utf-8") || has("gui_running")
+	if v:version >= 700
+		set list listchars=tab:»·,trail:·,extends:…,nbsp:‗
+	else
+		set list listchars=tab:»·,trail:·,extends:…
+	endif
+else
+	if v:version >= 700
+		set list listchars=tab:>-,trail:.,extends:>,nbsp:_
+	else
+		set list listchars=tab:>-,trail:.,extends:>
+	endif
+endif
+
+"-----------------------------------------------------------------------
+" final commands
+"-----------------------------------------------------------------------
+
+" some basic commands
+augroup basics
+	au!
+
+	" turn of previous search results
+	au VimEnter * nohls
+
+	" always do a full syntax refresh
+	au BufEnter * syntax sync fromstart
+
+	" cd to buffer directory
+	au BufEnter * execute ":silent! lcd " . expand("%:p:h")
+augroup END
+
+" restore cursor without mkview overhead (and bugs)
+function! ResCur()
+	if line("'\"") <= line("$")
+		normal! g`"
+		return 1
+	endif
+endfunction
+
+augroup resCur
+	au!
+	au BufWinEnter * call ResCur()
+augroup END
+
+" file type specific settings
+augroup filetype_settings
+	au BufRead,BufNewFile *.json set ft=javascript
+	au BufRead,BufNewFile *.coffee set ft=coffee
+	au BufRead,BufNewFile *.applescript set ft=applescript
+
+	au FileType {css,scss} set ts=2 sw=2 et
+	au FileType {coffee,javascript,json} set ts=2 sw=2 et
+	au FileType {haml,html} set ts=2 sw=2 et
+	au FileType {ruby,eruby,yaml} set ts=2 sw=2 et
+	au FileType python set ts=4 sw=4 tw=0 et
+augroup END
+
+"-----------------------------------------------------------------------
+" global settings
+"-----------------------------------------------------------------------
+
+" personal leader key
+let mapleader = ","
+
+" Set GUI window size
+if has("gui_running")
+	set lines=50
+	set columns=150
+endif
+
+" use the wildmenu
+set wildmenu
+set wildmode=full
+"
+" reload files changed outside of vim
+set autoread
+
+" easy pasting
+set pastetoggle=<F4>
+
+"-----------------------------------------------------------------------
+" plugin settings
+"-----------------------------------------------------------------------
+
+" conque
+let g:ConqueTerm_FastMode = 0
+let g:ConqueTerm_Color = 2
+let g:ConqueTerm_ReadUnfocused = 1
+let g:ConqueTerm_InsertOnEnter = 1
+let g:ConqueTerm_CWInsert = 1
+let g:ruby_conque_rspec_command='bundle exec rspec -cfs'
+let g:ruby_conque_window_height=20
+
+" ctrlp
+let g:ctrlp_max_height = 30
+
+" powerline
+let g:Powerline_symbols = 'fancy'
+
+" selectbuf
+let g:selBufAlwaysHideBufNums = 1
+
+" supertab
+let g:SuperTabDefaultCompletionType = "<C-X><C-O>"
+highlight Pmenu ctermbg=238 gui=bold
+
+" syntastic
+let g:syntastic_auto_jump=1
+let g:syntastic_auto_loc_list=1
+let g:syntastic_error_symbol='✗'
+let g:syntastic_warning_symbol='⚠'
+
+" taglist
+let Tlist_GainFocus_On_ToggleOpen = 1
+let Tlist_Close_On_Select = 1
+let Tlist_Highlight_Tag_On_BufEnter = 0
+let Tlist_Sort_Type = "name"
+
+"-----------------------------------------------------------------------
+" auto commands
+"-----------------------------------------------------------------------
+
+" expand tabs in C
+autocmd FileType c,cpp set ts=4 sw=4 tw=79 expandtab et
+
+" ruby completion
+autocmd FileType ruby,eruby set omnifunc=rubycomplete#Complete
+autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading = 1
+autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
+autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
+
+" all remaining filetypes use syntaxcomplete
+autocmd Filetype *
+			\ if &omnifunc == "" |
+			\   setlocal omnifunc=syntaxcomplete#Complete |
+			\ endif
+
+" remember the git root of the current project
+autocmd VimEnter,BufEnter * let b:git_root_dir = system("git rev-parse --show-toplevel 2>/dev/null")[:-2]
+
+" use project-level tagfiles
+autocmd VimEnter,BufEnter * execute("set tags=./tags," . b:git_root_dir . "/tags")
+
+" close nerdcommenter if its the last window
+autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+
+" delete fugitive buffers
+autocmd BufReadPost fugitive://* set bufhidden=delete
+
+"-----------------------------------------------------------------------
+" custom functions
+"-----------------------------------------------------------------------
+
+" shortcut for file rename
+function! RenameFile()
+	let old_name = expand('%')
+	let new_name = input('New file name: ', expand('%'), 'file')
+	if new_name != '' && new_name != old_name
+		exec ':saveas ' . new_name
+		exec ':silent !rm ' . old_name
+		redraw!
+	endif
+endfunction
+
+" git-grep function
+if !exists('g:git_grep_command')
+	let g:git_grep_command = 'git grep -n '
+endif
+
+function! s:GitGrep(terms)
+	let expr = g:git_grep_command.'"'.a:terms.'"'
+
+	execute ":silent! lcd " . b:git_root_dir
+	cgetexpr system(expr)
+	execute ":silent! lcd " . expand("%:p:h")
+
+	cwin
+	echo 'Number of matches: ' . len(getqflist())
+endfunction
+
+function! s:GitGrepWord()
+	call s:GitGrep(expand("<cword>"))
+endfunction
+
+command! -nargs=0 GitGrepWord :call s:GitGrepWord()
+command! -nargs=+ GitGrep     :call s:GitGrep(<q-args>)
+
+"-----------------------------------------------------------------------
+" key mappings
+"-----------------------------------------------------------------------
+
+" function keys
+nnoremap <silent> <F1> :help<cr>
+nnoremap <silent> <F2> :call RenameFile()<cr>
+" nnoremap <F3> :SelectBuf<cr>
+nnoremap <silent> <F4> :set invpaste<cr>
+nnoremap <silent> <F5> :call system("ctags -R --c++-kinds=+p --fields=+iaS --extra=+q -f " . b:git_root_dir . "/tags " . b:git_root_dir)<cr>
+nnoremap <silent> <F6> :TlistToggle<cr>
+" nnoremap <F8> toggle terminal input mode
+" vnoremap <F9> send a visually selected range of text to an existing terminal buffer
+" nnoremap <F10> send the entire contents of the file to an existing terminal buffer
+" nnoremap <F11> execute the current file in a new terminal buffer
+nnoremap <silent> <F12> :GundoToggle<cr>
+
+" map Ctrl-N to write+next
+imap <C-n> <esc>:w<cr>:n<cr>
+map <C-n> :w<cr>:n<cr>
+
+" window movement
+map <S-Down> <C-W><Down>
+map <S-Up> <C-W><Up>
+map <S-Left> <C-W><Left>
+map <S-Right> <C-W><Right>
+
+" Bubble single lines
+nmap <C-Up> ddkP
+nmap <C-Down> ddp
+
+" Bubble multiple lines
+vmap <C-Up> xkP`[V`]
+vmap <C-Down> xp`[V`]
+
+" tag search
+nnoremap <silent><Leader><C-]> <C-w><C-]>
+nnoremap <silent><C-]> g<C-]>
+
+" use sudo for writing
+cmap w!! w !sudo tee % >/dev/null
+
+" git grep for word under the cursor
+nmap <silent> <leader>gw :GitGrepWord<CR>
+
+" disable search hilight
+nmap <silent> <leader>n :silent :nohlsearch<cr>
+
+" cleanup whitespace terror
+nmap <silent> <leader>ws :set et<cr>:retab<cr>:%s/\s\+$//g<cr>
+
+" sort helper
+vmap <silent> <leader>so :sort<cr>
+vmap <silent> <leader>su :sort u<cr>
+
+" git shortcuts
+map <leader>gb :Gblame<cr>
+
+" rails shortcuts
+map <leader>rc :Rcontroller<cr>
+map <leader>rh :Rhelper<cr>
+map <leader>rm :Rmodel<cr>
+map <leader>rv :Rview<cr>
+
+" convert ruby 1.8 hash syntax to ruby 1.9 version
+map <silent> <leader>rbh :%s/:\(\w\+\) => /\1: /g<cr>
+
+" add ruby debugger
+nnoremap <silent><leader>rad Orequire 'debugger'; debugger<esc>
+
+" run current spec in conque
+nmap <silent> <leader>rsf :call RunRspecCurrentFileConque()<CR>
+nmap <silent> <leader>rsl :call RunRspecCurrentLineConque()<CR>
+
+" vim: set sw=4 ts=4 tw=72
