@@ -1,0 +1,26 @@
+[user]
+	email = andreas@nuessle.in
+	name = Andreas Nüßlein
+
+[color]
+	diff = auto
+	status = auto
+	branch = auto
+
+[alias]
+	co = checkout
+	ci = commit
+	cp = cherry-pick
+	st = status
+	wdiff = diff --color-words
+	wshow = show --color-words
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %Cblue<%an>%Creset' --abbrev-commit --date=relative
+
+[push]
+	default = matching
+[http]
+	sslVerify = false
+[diff]
+	renames = true
+#[github]
+#	user = hollow
