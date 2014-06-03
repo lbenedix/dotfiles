@@ -40,7 +40,9 @@ self_update() {
 
 source "${_BASHRC_DIR}/bashrc"
 
-source ~/.virtualenvs/py27/bin/activate
+if [ -e ~/.virtualenvs/py27/bin/activate ]; then
+	source ~/.virtualenvs/py27/bin/activate
+fi
 
 # cleanup
 unset _BASHRC_DIR _DOTFILES_DIR _DOTFILES_BRANCH
