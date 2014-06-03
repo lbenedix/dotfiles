@@ -5,3 +5,27 @@ keycode 38 = a A adiaeresis Adiaeresis
 keycode 32 = o O odiaeresis Odiaeresis
 keycode 30 = u U udiaeresis Udiaeresis
 keycode 39 = s S ssharp
+
+keycode 49 = grave asciitilde degree
+
+! ♥
+keycode 43 = h H U2665
+! ☺
+keycode 19 = 0 parenright U263A
+! ☮
+keycode 33 = p P U262E
+! •
+keycode 60 = period greater U2022
+
+! nuklear
+!keycode 33 = p P U2622
+! rain ^^
+!keycode 33 = p P U2614
+! totenkopf
+!keycode 33 = p P U2620
+! startreck
+!keycode 33 = p P U269D
+!
+!☃ mr. schnee
+!keycode 39 = s S U2603
+
