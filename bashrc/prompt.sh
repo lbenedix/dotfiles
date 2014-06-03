@@ -116,6 +116,7 @@ __ps1_virtualenv() {
 		echo -e " ${PCOL_yellow}env:$(basename ${VIRTUAL_ENV})${PCOL_none}"
 	fi
 }
+export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 __ps1_rc() {
 	if [[ ${1:-0} -eq 0 ]]; then

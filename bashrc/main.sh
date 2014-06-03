@@ -11,28 +11,36 @@ _DOTFILES_DIR="${HOME}/.dotfiles"
 _BASHRC_DIR="${_DOTFILES_DIR}/bashrc"
 
 # self update magic
-pushd ${_DOTFILES_DIR} &>/dev/null
+self_update() {
+	pushd ${_DOTFILES_DIR} &>/dev/null
 
-if timeout 2 git fetch -q origin; then
-	if [[ -n "$(git whatchanged HEAD..origin/${_DOTFILES_BRANCH})" ]]; then
-		git checkout ssh/known_hosts
-		if git merge origin/${_DOTFILES_BRANCH}; then
-			git submodule update --init
-			popd &>/dev/null
-			exec ${SHELL} -li
+	if timeout 10 git fetch -q origin; then
+		if [[ -n "$(git whatchanged HEAD..origin/${_DOTFILES_BRANCH})" ]]; then
+			git checkout ssh/known_hosts
+			if git merge origin/${_DOTFILES_BRANCH}; then
+				git submodule update --init
+				popd &>/dev/null
+#				exec ${SHELL} -li
+			else
+				echo -e "\033[1;31m*\033[0m merge failed! please merge manually."
+			fi
 		else
-			echo -e "\033[1;31m*\033[0m merge failed! please merge manually."
+			echo -en "\r\033[1;32m\$\033[0m "
+#			kill $$
+#			exec ${SHELL} -li
 		fi
 	else
-		echo -e "\033[1;32m*\033[0m dotfiles are up to date!"
+		echo -e "\033[1;31m*\033[0m dotfile update timed out ... :("
 	fi
-else
-	echo -e "\033[1;31m*\033[0m dotfile update timed out ... :("
-fi
 
-popd &>/dev/null
+	popd &>/dev/null
+}
+
+(self_update &)
 
 source "${_BASHRC_DIR}/bashrc"
+
+source ~/.virtualenvs/py27/bin/activate
 
 # cleanup
 unset _BASHRC_DIR _DOTFILES_DIR _DOTFILES_BRANCH

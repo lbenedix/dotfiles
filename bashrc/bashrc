@@ -138,6 +138,9 @@ if [[ -e ${HOME}/.bashrc.local ]]; then
 fi
 
 export PATH="${PATH}:/sbin:/usr/sbin:${_DOTFILES_DIR}/git:~/.bin"
+if [ -d ~/bin ]; then
+	export PATH="${PATH}:~/bin"
+fi
 
 # cleanup
 unset _BASHRC_DIR _SYSNAME _FQDN _NODENAME _DOMAINNAME _DISTNAME
