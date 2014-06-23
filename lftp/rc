@@ -1,0 +1,7 @@
+set cmd:csh-history on
+set cmd:default-protocol 'sftp'
+set prompt "lftp \[\e[1;31m\]\u\]\[\e[1;33m\]@\[\e[1;32m\]\h \[\e[1;34m\]\w >\[\e[0m\] "
+
+#alias l cls -lh
+alias l recls -trhl
+alias .. cd ..
