@@ -40,8 +40,8 @@ self_update() {
 
 source "${_BASHRC_DIR}/bashrc"
 
-if [ -e ~/.virtualenvs/py27/bin/activate ]; then
-	source ~/.virtualenvs/py27/bin/activate
+if [ -e ~/.virtualenvs/py34/bin/activate ]; then
+	source ~/.virtualenvs/py34/bin/activate
 fi
 
 # cleanup
