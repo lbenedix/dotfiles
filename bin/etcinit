@@ -1,0 +1,23 @@
+#!/bin/bash
+
+if [[ -d /etc/.git ]]; then
+	exit
+fi
+
+pushd /etc
+
+cat << EOF > .gitignore
+*~
+adjtime
+config-archive
+ld.so.cache
+mtab
+resolv*
+puppet/modules
+EOF
+
+git init
+chmod og-rwx .git
+git add .
+git commit -m "initial commit"
+popd
