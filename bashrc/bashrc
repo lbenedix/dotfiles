@@ -118,6 +118,10 @@ function T() {
 # ssh helper
 alias sshlive='ssh -l root -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" -o "GlobalKnownHostsFile /dev/null"'
 
+# systemctl
+alias sc='systemctl'
+alias jf='journalctl -f -n100'
+
 # pydf has nicer output
 if hash pydf &>/dev/null; then
 	alias df=pydf
