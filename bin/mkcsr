@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# create new certificate
+if [[ -z $1 ]]; then
+	echo "Usage: $0 <domain>"
+	exit 1
+fi
+
+openssl req -new -nodes -keyout $1.key -out $1.csr -newkey rsa:2048
+touch $1.crt
+chmod 0400 $1.key
+chmod 0644 $1.{csr,crt}
+echo
+cat $1.csr
