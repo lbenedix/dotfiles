@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [[ ! -e $HOME/.dotfiles ]]; then
-	git clone https://github.com/nutztherookie/dotfiles.git $HOME/.dotfiles
+	git clone https://github.com/lbenedix/dotfiles.git $HOME/.dotfiles
 	pushd $HOME/.dotfiles
 	#git checkout -b nutz origin/nutz
 	popd
