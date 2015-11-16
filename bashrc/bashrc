@@ -132,19 +132,6 @@ mkcd() {
 	mkdir -p "$1" && cd "$1"
 }
 
-
-export SSH_ASKPASS=/usr/bin/ssh-askpass
-if hash keychain; then
-	if [[ -r ~/.ssh/id_dsa ]]; then
-		eval `keychain --eval --quiet ~/.ssh/id_dsa`
-	fi
-	if [[ -r ~/.ssh/id_rsa ]]; then
-		eval `keychain --eval --quiet ~/.ssh/id_rsa`
-	fi
-fi
-
-
-
 # load local bashrc if it exists
 if [[ -e ${_BASHRC_DIR}/bashrc.local ]]; then
 	source ${_BASHRC_DIR}/bashrc.local
