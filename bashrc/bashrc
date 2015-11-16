@@ -141,9 +141,6 @@ if hash keychain; then
 	if [[ -r ~/.ssh/id_rsa ]]; then
 		eval `keychain --eval --quiet ~/.ssh/id_rsa`
 	fi
-	if [[ -r ~/.keys/nutz_rsa ]]; then
-		eval `keychain --eval --quiet ~/.keys/nutz_rsa`
-	fi
 fi
 
 
